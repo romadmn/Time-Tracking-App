@@ -1,34 +1,49 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
-
+import {TaskEditFormComponent} from './shared/components/task-edit-form/task-edit-form.component';
 import { AppComponent } from './app.component';
-import { NavMenuComponent } from './nav-menu/nav-menu.component';
-import { HomeComponent } from './home/home.component';
-import { CounterComponent } from './counter/counter.component';
-import { FetchDataComponent } from './fetch-data/fetch-data.component';
+import { NavMenuComponent } from './shared/components/nav-menu/nav-menu.component';
+import {MatTableModule} from '@angular/material/table';
+import {ProjectsComponent} from './shared/components/projects/projects.component';
+import {RefDirective} from './shared/directives/ref.directive';
+import {ProjectEditFormComponent} from './shared/components/project-edit-form/project-edit-form.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatSelectModule} from '@angular/material/select';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatInputModule, MatNativeDateModule, MatPaginatorModule, MatSortModule} from '@angular/material';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
-    HomeComponent,
-    CounterComponent,
-    FetchDataComponent
+    ProjectsComponent,
+    ProjectEditFormComponent,
+    RefDirective,
+    TaskEditFormComponent
   ],
   imports: [
-    BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
+    BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
     HttpClientModule,
+    MatTableModule,
     FormsModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    ReactiveFormsModule,
     RouterModule.forRoot([
-      { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'counter', component: CounterComponent },
-      { path: 'fetch-data', component: FetchDataComponent },
-    ])
+      {path: '', component: ProjectsComponent, pathMatch: 'full'},
+    ]),
+    BrowserAnimationsModule,
+    MatSortModule,
+    MatInputModule,
+    MatPaginatorModule
   ],
   providers: [],
+  entryComponents: [ProjectEditFormComponent, TaskEditFormComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

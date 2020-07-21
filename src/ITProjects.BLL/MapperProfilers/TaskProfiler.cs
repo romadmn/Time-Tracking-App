@@ -14,15 +14,15 @@ namespace ITProjects.BLL.MapperProfilers
         {
             CreateMap<TaskGetDto, Task>().ReverseMap()
                 .ForMember(a => a.Id, opt => opt.Condition(a => a.Id != 0))
-                .ForMember(a => a.StartDate, opt => opt.MapFrom(x => x.TaskLists.Last().StartDate))
-                .ForMember(a => a.CancelDate, opt => opt.MapFrom(x => x.TaskLists.Last().CancelDate))
+                .ForMember(a => a.StartDate, opt => opt.MapFrom(x => x.TaskLists.LastOrDefault().StartDate))
+                .ForMember(a => a.CancelDate, opt => opt.MapFrom(x => x.TaskLists.LastOrDefault().CancelDate))
                 .AfterMap((entity, model) =>
             {
                 if (model.StartDate != DateTime.MinValue)
                 {
                     if (model.CancelDate != DateTime.MinValue)
                     {
-                        model.TimeSpentOnTheTask = model.CancelDate.Date.Subtract(model.StartDate);
+                        model.TimeSpentOnTheTask = model.CancelDate.Subtract(model.StartDate);
                     }
                     model.TimeSpentOnTheTask = DateTime.UtcNow.Subtract(model.StartDate);
                 }

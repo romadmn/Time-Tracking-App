@@ -9,6 +9,7 @@ namespace ITProjects.BLL.DataTransferObjects.TaskDto
         public int Id { get; set; }
         public string Ticket { get; set; }
         public string Description { get; set; }
+        public DateTime CreateDate { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime CancelDate { get; set; }
         public TimeSpan TimeSpentOnTheTask { get; set; }

@@ -1,0 +1,42 @@
+<section class="backdrop">
+
+  <form
+    [formGroup]="editProjectForm"
+    #ngForm="ngForm"
+    (ngSubmit)="onSubmit()"
+    class="form-popup text-center border border-light p-5"
+  >
+    <p class="h2 mb-4 title">Edit project</p>
+      <div class="form-row mb-4">
+        <div class="col-3">
+          <p class="input-label">Name:<span class="asterisk"> *</span></p>
+        </div>
+        <div class="col-4">
+          <!-- Book title -->
+          <input
+            formControlName="name"
+            type="text"
+            class="form-control"
+            maxlength="50"
+          />
+          <div
+            *ngIf="editProjectForm.get('name').invalid && editProjectForm.get('name').touched"
+            class="validation"
+          >
+            <small *ngIf="editProjectForm.get('name').errors.required">
+              Name can't be empty.
+            </small>
+
+            <small *ngIf="editProjectForm.get('name').errors.maxLength">
+              Name can't be greater than 50 symbols.
+            </small>
+          </div>
+        </div>
+      </div>
+
+    <button [disabled]="editProjectForm.get('ticket').invalid" class="btn btn-info" type="submit" name="submit">
+      Save
+    </button>
+    <input type="button" class="btn" (click)="cancel()" value="Cancel" />
+  </form>
+</section>

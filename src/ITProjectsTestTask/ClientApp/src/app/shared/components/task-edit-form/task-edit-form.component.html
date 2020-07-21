@@ -1,0 +1,68 @@
+<section class="backdrop">
+
+  <form
+    [formGroup]="editTaskForm"
+    #ngForm="ngForm"
+    (ngSubmit)="onSubmit()"
+    class="form-popup text-center border border-light p-5"
+  >
+    <p class="h2 mb-4 title">Edit task</p>
+    <div class="form-row mb-4">
+      <div class="col-3">
+        <p class="input-label">Ticket:<span class="asterisk"> *</span></p>
+      </div>
+      <div class="col-4">
+        <!-- Book title -->
+        <input
+          formControlName="ticket"
+          type="text"
+          class="form-control"
+          maxlength="50"
+        />
+        <div
+          *ngIf="editTaskForm.get('ticket').invalid && editTaskForm.get('ticket').touched"
+          class="validation"
+        >
+          <small *ngIf="editTaskForm.get('ticket').errors.required">
+            Ticket can't be empty.
+          </small>
+
+          <small *ngIf="editTaskForm.get('ticket').errors.maxLength">
+            Ticket can't be greater than 50 symbols.
+          </small>
+        </div>
+      </div>
+    </div>
+    <div class="form-row mb-4">
+      <div class="col-3">
+        <p class="input-label">Description:<span class="asterisk"> *</span></p>
+      </div>
+      <div class="col-4">
+        <!-- Book title -->
+        <input
+          formControlName="description"
+          type="text"
+          class="form-control"
+          maxlength="1000"
+        />
+        <div
+          *ngIf="editTaskForm.get('description').invalid && editTaskForm.get('description').touched"
+          class="validation"
+        >
+          <small *ngIf="editTaskForm.get('description').errors.required">
+            Description can't be empty.
+          </small>
+
+          <small *ngIf="editTaskForm.get('description').errors.maxLength">
+            Description can't be greater than 1000 symbols.
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-info" type="submit" name="submit">
+      Save
+    </button>
+    <input [disabled]="editTaskForm.get('ticket').invalid" type="button" class="btn" (click)="cancel()" value="Cancel" />
+  </form>
+</section>

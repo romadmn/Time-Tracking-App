@@ -1,0 +1,182 @@
+<ng-template appRef></ng-template>
+<div class="container my-4">
+  <div class="row">
+    <div class="col">
+      <button type="submit" name="submit" (click)="hideAddProjectForm = !hideAddProjectForm" class="btn btn-lg btn-block btn-primary">Add new project</button>
+    </div>
+    <div class="col">
+      <button type="submit" name="submit" (click)="hideAddTaskForm = !hideAddTaskForm" class="btn btn-lg btn-block btn-primary">Add new task</button>
+    </div>
+  </div>
+
+  <form [hidden]="hideAddProjectForm"
+    [formGroup]="addProjectForm"
+    #ngForm="ngForm"
+    (ngSubmit)="onAddProject()">
+    <br/>
+    <div class="form-group">
+      <h4>Add project</h4>
+      <label >Name</label>
+      <input formControlName="name" type="text" class="form-control" aria-describedby="emailHelp" placeholder="Enter name">
+      <div
+        *ngIf="addProjectForm.get('name').invalid && addProjectForm.get('name').touched"
+        class="validation"
+      >
+        <small *ngIf="addProjectForm.get('name').errors.required">
+          Name can't be empty.
+        </small>
+
+        <small *ngIf="addProjectForm.get('name').errors.maxLength">
+          Name can't be greater than 50 symbols.
+        </small>
+      </div>
+    </div>
+    <button [disabled]="addTaskForm.get('ticket').invalid" type="submit" name="submit" class="btn btn-primary">Add project</button>
+  </form>
+  <form [hidden]="hideAddTaskForm"
+        [formGroup]="addTaskForm"
+        #ngForm="ngForm"
+        (ngSubmit)="onAddTask()">
+    <div class="form-group">
+      <br/>
+      <h4>Add task</h4>
+      <label >Ticket</label>
+      <input formControlName="ticket" type="text" class="form-control" aria-describedby="emailHelp" placeholder="Enter name">
+      <div
+        *ngIf="addTaskForm.get('ticket').invalid && addTaskForm.get('ticket').touched"
+        class="validation"
+      >
+        <small *ngIf="addTaskForm.get('ticket').errors.required">
+          Ticket can't be empty.
+        </small>
+
+        <small *ngIf="addTaskForm.get('ticket').errors.maxLength">
+          Ticket can't be greater than 50 symbols.
+        </small>
+      </div>
+      <label >Description</label>
+      <input formControlName="description" type="text" class="form-control" aria-describedby="emailHelp" placeholder="Enter name">
+      <div
+        *ngIf="addTaskForm.get('description').invalid && addTaskForm.get('description').touched"
+        class="validation"
+      >
+        <small *ngIf="addTaskForm.get('description').errors.required">
+          Description can't be empty.
+        </small>
+
+        <small *ngIf="addTaskForm.get('description').errors.maxLength">
+          Description can't be greater than 1000 symbols.
+        </small>
+      </div>
+    </div>
+    <button [disabled]="addTaskForm.get('ticket').invalid" type="submit" name="submit" class="btn btn-primary">Add task</button>
+  </form>
+  <br/>
+
+  <ng-template [ngIf]="projects?.length==0" [ngIfElse]="projectsExist">
+    <div class="container my-5 py-5 z-depth-1">
+
+      <section class="text-center px-md-5 mx-md-5 dark-grey-text">
+        <h3 class="font-weight-bold">No projects found.</h3>
+      </section>
+
+    </div>
+  </ng-template>
+
+
+  <ng-template #projectsExist>
+    <div class="row">
+      <div class="col">
+        <div class="row">
+          <div class="col">
+            <h4>Select project</h4>
+            <mat-form-field appearance="fill">
+              <mat-label>Project</mat-label>
+              <mat-select>
+                <mat-option *ngFor="let project of projects" (onSelectionChange)="getProjectWithTasks(project.id)">
+                  {{project.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col">
+            <button (click)="showEditProjectForm(project)" class="btn btn-info mt-4"><a class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a></button>
+            <button (click)="deleteProject(project.id)" class="btn btn-danger mt-4"><a class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a></button>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <h4>Select date</h4>
+        <mat-form-field appearance="fill">
+          <mat-label>Choose a date</mat-label>
+          <input matInput [matDatepicker]="picker" [(ngModel)]="date" (dateChange)="getTasksForDate($event.value)">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div class="col">
+        <div class="example-header">
+          <mat-form-field>
+            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div class="example-container mat-elevation-z8">
+
+      <mat-table [dataSource]="tasks" matSort>
+
+        <ng-container matColumnDef="id">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> ID </mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.id}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="times">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Times </mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.timeSpentOnTheTask}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="ticket">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Ticket </mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.ticket}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Description </mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.description}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="start">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Start </mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.startDate | date:'HH:mm'}}
+            <button (click)="startTask(row.id)" class="btn btn-info ml-2"><a class="start" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Start">not_started</i></a></button>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="end">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> End </mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.cancelDate | date:'HH:mm'}}
+            <button (click)="cancelTask(row.id)" class="btn btn-danger ml-2"><a class="start" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Start">stop</i></a></button>
+          </mat-cell>
+        </ng-container>
+
+          <ng-container matColumnDef="editAndDelete">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>  </mat-header-cell>
+            <mat-cell *matCellDef="let row">
+              <button (click)="showEditTaskForm(row)" class="btn btn-info"><a class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a></button>
+              <button (click)="deleteTask(row.id)" class="btn btn-danger"><a class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a></button>
+            </mat-cell>
+          </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;">
+        </mat-row>
+      </mat-table>
+
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    </div>
+    <br/>
+    <h4>Times sum: {{project?.totalTimeSpentOnTasks}}</h4>
+    </ng-template>
+
+</div>

@@ -66,7 +66,7 @@ namespace ITProjects.Web.Controllers
 
         // PUT: api/tasks/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAsync([FromRoute] int id, [FromForm] TaskPutDto taskDto)
+        public async Task<IActionResult> PutAsync([FromRoute] int id, [FromBody] TaskPutDto taskDto)
         {
             if (id != taskDto.Id)
             {

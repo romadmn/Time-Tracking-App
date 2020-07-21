@@ -10,5 +10,6 @@ namespace ITProjects.BLL.DataTransferObjects.ProjectDto
         public int Id { get; set; }
         public string Name { get; set; }
         public List<TaskGetDto> Tasks { get; set; }
+        public TimeSpan TotalTimeSpentOnTasks { get; set; }
     }
 }

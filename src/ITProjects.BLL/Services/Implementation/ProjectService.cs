@@ -43,7 +43,12 @@ namespace ITProjects.BLL.Services.Implementation
         {
             var project = _mapper.Map<ProjectGetDto>(
                 await _projectRepository.FindByCondition(x => x.Id == projectId));
-            project.Tasks = _mapper.Map<List<TaskGetDto>>(_taskRepository.GetAll().Where(x => x.CreateDate.Day == DateTime.Today.Day && x.ProjectId == projectId).ToList());
+            project.Tasks = _mapper.Map<List<TaskGetDto>>(_taskRepository.GetAll().Include(x=>x.TaskLists).Where(x => x.CreateDate.Day == DateTime.Today.Day && x.ProjectId == projectId).ToList());
+            project.TotalTimeSpentOnTasks = TimeSpan.Zero;
+            foreach (var task in project.Tasks)
+            {
+                project.TotalTimeSpentOnTasks = project.TotalTimeSpentOnTasks.Add(task.TimeSpentOnTheTask);
+            }
             return project;
         }
 
